@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Signin</title>
+</head>
+<body>
+	<div style="float:left;margin:10px;">
+		<a href="/">Home</a>
+	</div>
+	<div style="float:right">
+		<% if(username && authenticated){ %>
+			<a href="/users/signout" style="margin:10px;">Sign Out</a>
+			<a href="/users/add_article" style="margin:10px;">Add Article</a>
+			<a href="/users/profile" style="margin:10px;">Profile</a>
+			<span><%= username %></span>
+		<% } else { %>
+			<a href="/users/register" style="margin:10px;">Register</a>
+			<a href="/usrs/signin" style="margin:10px;">Log In</a>
+		<% } %>
+	</div>
+	<div style="padding:50px;">
+		<h1><%= title %></h1>
+	</div>
+
+	<% for(var index = 0 ; index < blog.length ; index++) { %>
+		<div>
+			<div style="float:left;margin-top:10px;">
+				<%= blog[index].Username %>
+			</div>
+			<div style="float:right;margin-top:10px;">
+				<%= blog[index].CreateDate %>
+			</div>
+			<br />
+			<div style="clear:both">
+				<%= blog[index].Article %>
+			</div>
+			<div>
+				<a href="/apis/delete/<%= blog[index].id %>" style="float:right;margin-top:5px;margin-right:15px;">Delete</a>
+				<a href="/apis/modify/<%= blog[index].id %>" style="float:right;margin-top:5px;margin-right:20px;">Modify</a>
+			</div>
+			<hr style="margin-top:30px;" />
+		</div>
+	<% } %>
+</body>
+</html>

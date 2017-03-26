@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> Blog System </title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+	<div style="float:left">
+		<a href="/">Home</a>
+	</div>
+	<div style="float:right">
+		<% if(username && authenticated) { %>
+			<a href="/users/signout" style="margin:10px;">Sign Out</a>
+			<a href="/users/add_article" style="margin:10px;">Add Article</a>
+			<a href="/users/profile" style="margin:10px;">Profile</a>
+			<span><%= username%></span>
+		<% } else { %>
+			<a href="/users/signin" style="margin:10px;">Log In</a>
+			<a href="/users/signup" style="margin:10px;">Register</a>
+			<a href="/users/forget" style="margin:10px;">Forgot password</a>
+		<% } %>
+
+	</div>
+	<div style="padding:50px;">
+		<h1><%= title %></h1>
+	</div>
+
+	<% for(var i = 0 ; i< blog.length ; i++ ){ %>
+		<div>
+			<div style="float:left;margin-top:10px;">
+				<%= blog[i].Article %> 
+			</div>
+			<div style="float:right;margin-top:10px;">
+				<%=  blog[i].CreateDate %>
+			</div>
+			<br />
+			<p style="clear:both"><%=  blog[i].Article %></p>
+			<a href="/users/message/<%= blog[i].id %>" style="float:right;margin-top:105px;margin-right:20px;">Leave a message</a>
+			<hr style="margin-top:110px;" />
+		</div>
+
+	<% } %>
+    <h1><%= title %></h1>
+    
+  </body>
+</html>

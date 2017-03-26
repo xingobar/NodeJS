@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>LogIn</title>
+</head>
+<body>
+	<div style="float:left;margin:10px;">
+		<a href="/">Home</a>
+	</div>
+	<div style="float:right">
+		<% if (username && authenticated) {%>
+			<a href="/users/signout" style="margin:10px;">Sign Out</a>
+			<a href="/users/profile" style="margin:10px;">Profile</a>
+			<span><%= username %></span>
+		<% } else { %> 
+			<a href="/users/register" style="margin:10px;">Register</a>
+			<a href="/users/signin" style="margin:10px;">Log In</a>
+		<% } %>
+	</div>
+	<div style="padding:50px;">
+		<form name="add" action="/apis/add" method="post">
+			<h1>Add Article</h1>
+			<div>
+				<p>
+					<span>Writer : </span>
+					<label style="padding-right:50px;"><%= username %></label>
+				</p>
+				<p>
+					<textarea cols="50" rows="25" style="resize:none;" name="Content">
+						
+					</textarea>
+				</p>
+				<div>
+					<span style="padding-right:377px;"></span>
+					<input type="submit" name="submit" value="Save" />
+				</div>
+			</div>
+
+		</form>
+	</div>
+</body>
+</html>
