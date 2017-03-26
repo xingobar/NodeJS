@@ -71,7 +71,7 @@ router.get('/modify/:id',function(req,res,next){
 		res.redirect('/');
 		return ;
 	}
-	res.locals.username = req.sesion.name;
+	res.locals.username = req.session.name;
 	res.locals.authenticated = req.session.logined;
 	res.locals.messageID = req.params.id;
 	Blog.find({_id : req.params.id},function(err,blogs,count){

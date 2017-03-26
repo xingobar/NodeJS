@@ -47,7 +47,20 @@ router.post('/add',function(req,res,next){
 });
 
 router.post('/update/:id',function(req,res,next){
-	res.send('This is the update function');
+	if(!req.params.id){
+		res.redirect('/');
+		return ;
+	}
+	Blog.update({_id:req.params.id}, {
+		Article:req.body.Content	
+	},function(err){
+		if(err){
+			console.log("Fail to update article");
+		}else{
+			console.log("Done");
+		}
+	});
+	res.redirect('/users/profile');
 });
 
 router.post('/comment/:id',function(req,res,next){
