@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Leave a Message</title>
+</head>
+<body>
+	<div style="float:left;margin:10px;">
+		<a href="/">Home</a>
+	</div>
+	<div style="float:right">
+		<% if(username && authenticated){ %>
+			<a href="/users/signout" style="margin:10px;">Sign Out</a>
+			<a href="/users/add_article" style="margin:10px;">Add Article</a>
+			<a href="/users/profile" style="margin:10px;">Profile</a>
+			<span><%= username %></span>
+		<% } else { %>
+			<a href="/users/register" style="margin:10px;">Register</a>
+			<a href="/usrs/signin" style="margin:10px;">Log In</a>
+		<% } %>
+	</div>
+	<div style="padding:50px;">
+		<h1>Message</h1>
+	</div>
+	<% for(var index =0  ; index < blog.length ; index++) { %>
+		<div>
+			<div style="float:left;margin-top:10px;">
+				<%= blog[index].Username %>
+			</div>
+			<div style="float:right;margin-top:10px;">
+				<%= blog[index].CreateDate %>
+			</div>
+			<br />
+			<div style="clear:both">
+				<%= blog[index].Article %>
+			</div>
+			<hr style="margin-top:30px;" />
+			<br />
+			<br />
+		</div>
+
+	<% } %>
+	<div style="width:40%;margin-left:30%;">
+		<% for(var index =0 ; index < comments.length ; index++){ %>
+			<div style="right:42%;margin-top:20px;">
+				<div style="float:left;margin-top:10px;">
+					<%= comments[index].Visitor %>
+				</div>
+				<div style="float:right;margin-top:10px;">
+					<%= comments[index].CreateDate %>
+				</div>
+				<br />
+				<div style="clear:both">
+					<%= comments[index].Comment %>
+				</div>
+				<hr style="margin-top:30px;" />
+				<br />
+				<br />
+			</div>
+		<% } %>
+	</div>
+	<div style="margin-left:30%;">
+		<form name="comment" action="/apis/comment/<%= messageID %>" method="post" >
+			<h1>Leave a message</h1>
+			<div>
+				<p>
+					<span>Name : </span>
+					<input type="text" name="Visitor" />
+				</p>
+				<p>
+					<textarea cols="50" rows="10" style="resize:none;" name="Comment">
+						
+					</textarea>
+				</p>
+				<div>
+					<span style="padding-right:377px;"></span>
+					<input type="submit" name="submit" value="Reply" />
+					<hr style="width:50%;margin-top:30px;margin-left:0%;" />
+				</div>
+				<br />
+				<br />
+			</div>
+		</form>
+	</div>
+</body>
+</html>

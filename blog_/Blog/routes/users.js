@@ -82,7 +82,17 @@ router.get('/modify/:id',function(req,res,next){
 });
 
 router.get('/message/:id',function(req,res,next){
-	res.send('This is the message page');
+	res.locals.username = req.session.name;
+	res.locals.authenticated =req.session.logined;
+	res.locals.messageID = req.params.id;
+	Blog.find({_id:req.params.id},function(err,blogs,count){
+		Comment.find({MessageID : req.params.id},function(err,comments,count){
+			res.render('users/message',{
+				blog:blogs,
+				comments : comments
+			});
+		});
+	});
 });
 
 module.exports = router;
