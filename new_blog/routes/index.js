@@ -141,6 +141,23 @@ router.get('/logout',function(req,res){
 });
 
 
+router.get('/upload',checkLogin);
+router.get('/upload',function(req,res){
+  res.render('upload',{
+    title:'檔案上傳',
+    user:req.session.user,
+    success:req.flash('success'),
+    error:req.flash('error')
+  });
+});
+
+router.post('/upload',checkLogin);
+router.post('/upload',function(req,res){
+  req.flash('success','檔案上傳成功');
+  res.redirect('/upload');
+});
+
+
 // 頁面權限控管
 function checkLogin(req,res,next){
   if(!req.session.user){

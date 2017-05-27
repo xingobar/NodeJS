@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var flash = require('connect-flash');
+var multer  = require('multer');
 
 var routes = require('./routes');
 var index = require('./routes/index');
@@ -43,6 +44,14 @@ app.use(session({
 }));
 // 用來顯示通知
 app.use(flash());
+
+// 圖片上傳設定
+var upload = multer({
+  dest:'./public/images',
+  rename:function(fieldname,filename){
+    return filename;
+  }
+});
 
 app.use('/', index);
 app.use('/users', users);
