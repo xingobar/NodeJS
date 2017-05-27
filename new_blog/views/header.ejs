@@ -13,11 +13,27 @@
             <span>
                 <a title="主頁" href="/">home</a>
             </span>
-            <span>
-                <a title="登入" href="/login">login</a>
-            </span>
-            <span>
-                <a title="註冊" href="/register">register</a>
-            </span>
+            <% if(user){ %>
+                <span>
+                    <a title="發表" href="/post">post</a>
+                </span>
+                <span>
+                    <a title="登出" href="/logout">logout</a>
+                </span>
+
+            <% }else{ %>
+                <span>
+                    <a title="登入" href="/login">login</a>
+                </span>
+                <span>
+                    <a title="註冊" href="/register">register</a>
+                </span>
+            <% } %>
         </nav>
     <article>
+        <% if (success){ %> 
+            <div><%= success %> </div>
+        <% } %>
+        <% if (error){ %>
+            <div><%= error %> </div>
+        <% } %>
