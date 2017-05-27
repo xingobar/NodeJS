@@ -28,7 +28,7 @@ router.post('/register',function(req,res){
   var newUser = new User({
     name : name,
     password : password,
-    email : req.body.email
+    email : req.body.email,
   });
 
   User.get(newUser.name,function(err,user){
@@ -56,7 +56,10 @@ router.get('/login',function(req,res){
 });
 
 router.post('/login',function(req,res){
+   var md5 = crypto.createHash('md5');
+   var password = md5.update(req.session.password).digest('hex');
 
+   // 檢查用戶是否存在
 });
 
 router.get('/post',function(req,res){
