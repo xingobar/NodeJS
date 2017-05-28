@@ -7,7 +7,7 @@ Post  = require('../models/post');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  Post.get(null,function(err,posts){
+  Post.getAll(null,function(err,posts){
     
     if(err){
       posts = [];
@@ -155,6 +155,52 @@ router.post('/upload',checkLogin);
 router.post('/upload',function(req,res){
   req.flash('success','檔案上傳成功');
   res.redirect('/upload');
+});
+
+// 查詢該用戶的所有文章
+router.get('/u/:name',function(req,res){
+  //檢查用戶是否存在
+  User.get(req.params.name,function(err,user){
+    if(!user){
+      req.flash('error','用戶不存在!');
+      return res.redirect('/');
+    }
+
+    //查詢並傳回該用戶的所有文章
+    Post.getAll(user.name,function(err,posts){
+      if(err){
+        req.flash('error',err);
+        return res.redirect('/');
+      }
+
+      res.render('user',{
+        title:user.name,
+        posts:posts,
+        user:req.session.user,
+        success:req.flash('success').toString(),
+        error:req.flash('error').toString()
+      });
+    });
+  })
+});
+
+// 進入到該文章
+router.get('/u/:name/:day/:title',function(req,res){
+  
+  Post.getOne(req.params.name,req.params.day,req.params.title,function(err,post){
+    if(err){
+      req.flash('error',err);
+      return res.redirect('/');
+    }
+
+    return res.render('article',{
+      title:req.params.title,
+      post:post,
+      user:req.session.user,
+      success:req.flash('success').toString(),
+      error:req.flash('error').toString()
+    });
+  });
 });
 
 

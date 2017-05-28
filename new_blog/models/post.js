@@ -57,7 +57,7 @@ Post.prototype.save = function(callback){
 };
 
 // 讀取文章及其相關資訊
-Post.get = function(name,callback){
+Post.getAll = function(name,callback){
     // 打開資料庫
     mongodb.open(function(err,db){
         if(err){
@@ -88,3 +88,33 @@ Post.get = function(name,callback){
         });
     });
 };
+
+
+
+// 取得一篇文章
+Post.getOne = function(name,day,title,callback){
+    //打開資料庫
+    mongodb.open(function(err,db){
+        if(err){
+            return callback(err);
+        }
+        db.collection('posts',function(err,collection){
+            if(err){
+                mongodb.close();
+                return callback(err);
+            }
+            collection.findOne({
+                name:name,
+                "time.day":day,
+                title:title
+            },function(err,doc){
+                mongodb.close();
+                if(err){
+                    return callback(err);
+                }
+                doc.post = markdown.toHTML(doc.post);
+                return callback(null,doc);
+            })
+        });
+    }); 
+}
