@@ -162,6 +162,25 @@ router.post('/upload',function(req,res){
   res.redirect('/upload');
 });
 
+
+router.get('/archive',function(req,res){
+  Post.getArchive(function(err,posts){
+    if(err){
+      req.flash('error',err);
+      return res.redirect('/');
+    }
+    return res.render('archive',{
+      title:'存檔',
+      posts:posts,
+      user:req.session.user,
+      success:req.flash('success').toString(),
+      error:req.flash('error').toString()
+    });
+  });
+});
+
+
+
 // 查詢該用戶的所有文章
 router.get('/u/:name',function(req,res){
   //檢查用戶是否存在
