@@ -1,7 +1,8 @@
 var mongodb = require('./db');
 var markdown = require('markdown').markdown;
-function Post(name,title,tags,post){
+function Post(name,head,title,tags,post){
     this.name = name;
+    this.head = head;
     this.title = title;
     this.tags = tags,
     this.post = post;
@@ -27,6 +28,7 @@ Post.prototype.save = function(callback){
     // 要存入資料庫的文件檔
     var post = {
         name:this.name,
+        head:this.head,
         time:time,
         post:this.post,
         title:this.title,
@@ -164,18 +166,18 @@ Post.getOne = function(name,day,title,callback){
                 //doc.post = markdown.toHTML(doc.post);
                 if(doc){
                     //每瀏覽一次 pv值加一
-                    collection.update({
-                        name:name,
-                        "time.day":day,
-                        title:title
-                    },{
-                        $inc:{'pv':1}
-                    },function(err){
-                        mongodb.close();
-                        if(err){
-                            return callback(err);
-                        }
-                    });
+                    // collection.update({
+                    //     name:name,
+                    //     "time.day":day,
+                    //     title:title
+                    // },{
+                    //     $inc:{'pv':1}
+                    // },function(err){
+                    //     mongodb.close();
+                    //     if(err){
+                    //         return callback(err);
+                    //     }
+                    // });
                     // 解析 markdown 為 html
                     doc.post = markdown.toHTML(doc.post);
                     if(doc.comments){     

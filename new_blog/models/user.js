@@ -1,4 +1,5 @@
 var mongodb = require('./db');
+var crypto = require('crypto');
 
 function User(user){
     this.name = user.name;
@@ -8,13 +9,21 @@ function User(user){
 
 module.exports = User;
 
+// Reference : 
+// https://en.gravatar.com/site/implement/profiles/jsapi/
 // 儲存使用者資訊
 User.prototype.save = function(callback){
+
+    var md5 = crypto.createHash('md5');
+    var email_MD5 = md5.upate(this.email.toLowerCase()).digest('hex');
+    var head = "http://www.gravatar.com/avatar/"+email_MD5+"?s=48"; //大頭貼連結
+
     // 要存入資料庫的使用者檔案
     var user = {
         name:this.name,
         password:this.password,
-        email:this.email
+        email:this.email,
+        head:head
     };
 
     mongodb.open(function(err , db){

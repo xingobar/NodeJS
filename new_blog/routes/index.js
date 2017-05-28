@@ -129,7 +129,7 @@ router.post('/post',function(req,res){
   var currentUser = req.session.user;
   var tags = [req.body.tag1,req.body.tag2,req.body.tag3];
 
-  post =  new Post(currentUser.name,req.body.title,tags,req.body.post);
+  post =  new Post(currentUser.name,currentUser.head,req.body.title,tags,req.body.post);
   post.save(function(err){
     if(err){
       res.flash('error',err);
@@ -318,8 +318,14 @@ router.post('/u/:name/:day/:title',function(req,res){
         + date.getDate() + " " + date.getHours() + ":"+
         (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
 
+
+  var md5 = crypto.createHash('md5');
+  var email_MD5 = md5.update(req.body.email.toLowerCase()).digest('hex');
+  var head = "http://www.gravatar.com/avatar/"+email_MD5 +"?s=48";
+
   var comment = {
     name : req.body.name,
+    head:head,
     email : req.body.email,
     website : req.body.website,
     time : time,
@@ -395,6 +401,10 @@ router.get('/remove/:name/:day/:title',function(req,res){
   });
 });
 
+// 404 頁面
+router.use(function(req,res){
+  return res.render('404');
+});
 
 // 頁面權限控管
 function checkLogin(req,res,next){
