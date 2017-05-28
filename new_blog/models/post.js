@@ -31,7 +31,8 @@ Post.prototype.save = function(callback){
         post:this.post,
         title:this.title,
         tags:this.tags,
-        comments:[]
+        comments:[],
+        pv:0
     };
 
     // 打開資料庫
@@ -160,8 +161,27 @@ Post.getOne = function(name,day,title,callback){
                 }
                 //doc.post = markdown.toHTML(doc.post);
                 if(doc){
+                    //每瀏覽一次 pv值加一
+                    collection.update({
+                        name:name,
+                        "time.day":day,
+                        title:title
+                    },{
+                        $inc:{"pv":1}
+                    },function(err){
+                        if(err){
+                            return callback(err);
+                        }
+                    });
+                    // 解析 markdown 為 html
                     doc.post = markdown.toHTML(doc.post);
                     if(doc.comments){     
+                        // comment structure
+                        // @param1 : name
+                        // @param2 : email
+                        // @param3 : website
+                        // @param4 : content
+                        // @param5 : time
                         doc.comments.forEach(function(comment,index){
                             comment.content = markdown.toHTML(comment.content);
                         });   
