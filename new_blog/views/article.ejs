@@ -1,5 +1,5 @@
-<%- include header %>
 
+<%- include header %>
 
 <p>
     <% if(user && (user.name == post.name)){ %> 
@@ -22,5 +22,8 @@
     日期：<%= post.time.minute %>
 </p>
 <p> <%- post.post %> </p>
+
+
+<%- include comment %>
 
 <%- include footer %>

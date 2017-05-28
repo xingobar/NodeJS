@@ -28,7 +28,8 @@ Post.prototype.save = function(callback){
         name:this.name,
         time:time,
         post:this.post,
-        title:this.title
+        title:this.title,
+        comments:[]
     };
 
     // 打開資料庫
@@ -112,7 +113,15 @@ Post.getOne = function(name,day,title,callback){
                 if(err){
                     return callback(err);
                 }
-                doc.post = markdown.toHTML(doc.post);
+                //doc.post = markdown.toHTML(doc.post);
+                if(doc){
+                    doc.post = markdown.toHTML(doc.post);
+                    if(doc.comments){     
+                        doc.comments.forEach(function(comment,index){
+                            comment.content = markdown.toHTML(comment.content);
+                        });   
+                    }
+                }
                 return callback(null,doc);
             })
         });
