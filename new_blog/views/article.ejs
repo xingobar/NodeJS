@@ -1,5 +1,22 @@
 <%- include header %>
 
+
+<p>
+    <% if(user && (user.name == post.name)){ %> 
+        <span>
+            <a class="edit" href="/edit/<%= post.name %>/<%= post.time.day %>/<%= post.title %>">
+                編輯
+            </a>
+        </span>
+        <span>
+            <a class="edit" href="/remove/<%= post.name%>/<%= post.time.day %>/<%= post.title %>">
+                刪除
+            </a>
+        </span>
+     <% } %>
+</p>
+
+
 <p class="info">
     作者:<a href="/u/<%= post.name %>"><%= post.name %></a>
     日期：<%= post.time.minute %>

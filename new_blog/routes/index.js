@@ -203,6 +203,61 @@ router.get('/u/:name/:day/:title',function(req,res){
   });
 });
 
+// 編輯功能
+router.get('/edit/:name/:day/:title',checkLogin);
+router.get('/edit/:name/:day/:title',function(req,res){
+  var currentUser = req.session.user;
+  Post.edit(currentUser.name,req.params.day,req.params.title,function(err,post){
+    if(err){
+      req.flash('error',err);
+      return res.redirect('back');
+    }
+
+    return res.render('edit',{
+      title:'編輯',
+      post:post,
+      user:req.session.user,
+      success:req.flash('success').toString(),
+      error:req.flash('error').toString()
+    });
+  });
+});
+
+router.post('/edit/:name/:day/:title',checkLogin);
+router.post('/edit/:name/:day/:title',function(req,res){
+  
+  var currentUser = req.session.user;
+  Post.update(currentUser.name,req.params.day,
+              req.params.title,req.body.post,function(err){
+
+    var url = encodeURI('/u/' + req.params.name + '/' + req.params.day + '/' + req.params.title);
+    
+    if(err){
+      req.flash('error',err);
+      return res.redirect(url); // 錯誤的話傳回文章頁面
+    }
+
+    req.flash('success','修改成功');
+    return res.redirect(url);
+  });
+});
+
+
+
+router.get('/remove/:name/:day/:title',checkLogin);
+router.get('/remove/:name/:day/:title',function(req,res){
+  var currentUser = req.session.user;
+  Post.remove(currentUser.name,req.params.day,req.params.title,function(err){
+    if(err){
+      req.flash('error',err);
+      return res.redirect('back');
+    }
+
+    req.flash('success','刪除成功!');
+    return res.redirect('/');
+  });
+});
+
 
 // 頁面權限控管
 function checkLogin(req,res,next){
