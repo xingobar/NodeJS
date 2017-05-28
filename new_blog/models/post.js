@@ -57,6 +57,49 @@ Post.prototype.save = function(callback){
     });
 };
 
+
+// 一次取得十篇文章
+Post.getTen = function(name,page,callback){
+    // 打開資料庫
+    mongodb.open(function(err,db){
+        if(err){
+            return callback(err);
+        }
+
+        // 讀取posts集合
+        db.collection('posts',function(err,collection){
+            if(err){
+                mongodb.close();
+                return callback(err);
+            }
+            var query = {};
+            
+            if(name){
+                query.name = name;
+            }
+            
+            // 使用 count 傳回特定查詢的文件檔數量 total
+            collection.count(query,function(err,total){
+                collection.find(query,{
+                    skip:(page - 1) * 10,
+                    limit:10
+                }).sort({
+                    time:-1
+                }).toArray(function(err,docs){
+                    mongodb.close();
+                    if(err){
+                        return callback(err);
+                    }
+                    docs.forEach(function(doc){
+                        doc.post = markdown.toHTML(doc.post);
+                    })
+                    callback(null,docs,total);
+                });
+            });
+        });
+    });
+}
+
 // 讀取文章及其相關資訊
 Post.getAll = function(name,callback){
     // 打開資料庫
