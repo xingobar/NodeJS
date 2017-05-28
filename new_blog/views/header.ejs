@@ -19,6 +19,9 @@
             <span>
                 <a title="標籤" href="/tags">tags</a>
             </span>
+            <span>
+                <a title="友善連結" href="/links">links</a>
+            </span>
             <% if(user){ %>
                 <span>
                     <a title="上傳" href="/upload">upload</a>
@@ -38,6 +41,11 @@
                     <a title="註冊" href="/register">register</a>
                 </span>
             <% } %>
+            <span>
+                <form method="GET" action="/search">
+                    <input type="text" name="keywork" placeholder="SEARCH" class="search"/>
+                </form>
+            </span>
         </nav>
     <article>
         <% if (success){ %> 

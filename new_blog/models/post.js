@@ -139,6 +139,7 @@ Post.getAll = function(name,callback){
 
 
 // 取得一篇文章
+// TODO: error
 Post.getOne = function(name,day,title,callback){
     //打開資料庫
     mongodb.open(function(err,db){
@@ -150,6 +151,7 @@ Post.getOne = function(name,day,title,callback){
                 mongodb.close();
                 return callback(err);
             }
+            // 根據用戶名稱 發表日期及文章名稱查詢
             collection.findOne({
                 name:name,
                 "time.day":day,
@@ -167,8 +169,9 @@ Post.getOne = function(name,day,title,callback){
                         "time.day":day,
                         title:title
                     },{
-                        $inc:{"pv":1}
+                        $inc:{'pv':1}
                     },function(err){
+                        mongodb.close();
                         if(err){
                             return callback(err);
                         }
@@ -357,6 +360,38 @@ Post.getTag = function(tag,callback){
                 name:1,
                 time:1,
                 title:1,
+            }).sort({
+                time:-1
+            }).toArray(function(err,docs){
+                mongodb.close();
+                if(err){
+                    return callback(err);
+                }
+                callback(null,docs);
+            });
+        });
+    });
+};
+
+// 傳回以標題為關鍵字查詢的所有文章資訊
+Post.search = function(keywork,callback){
+    mongodb.open(function(err,db){
+        if(err){
+            return callback(err);
+        }
+        db.collection('posts',function(err,collection){
+            if(err){
+                mongodb.close();
+                return callback(err);
+            }
+            // 不分大小寫
+            var pattern  =  new RegExp(keywork,"i");
+            collection.find({
+                title:pattern
+            },{
+                name:1,
+                time:1,
+                title:1
             }).sort({
                 time:-1
             }).toArray(function(err,docs){

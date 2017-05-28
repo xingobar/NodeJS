@@ -215,6 +215,36 @@ router.get('/tags/:tag',function(req,res){
   });
 });
 
+// 友善連結
+router.get('/links',function(req,res){
+  return res.render('links',{
+    title:'友善連結',
+    user:req.session.user,
+    success:req.flash('success').toString(),
+    error:req.flash('error').toString()
+  });
+});
+
+
+
+// 搜尋文章
+router.get('/search',function(req,res){
+  Post.search(req.query.keywork,function(err,posts){
+    if(err){
+      req.flash('error',err);
+      return res.redirect('/');
+    }
+    return res.render('search',{
+      title:'SEARCH : ' + req.query.keywork,
+      posts:posts,
+      user:req.session.user,
+      success:req.flash('success').toString(),
+      error:req.flash('error').toString()
+    });
+  });
+});
+
+
 
 // 查詢該用戶的所有文章
 router.get('/u/:name',function(req,res){
