@@ -127,7 +127,9 @@ router.get('/post',function(req,res){
 router.post('/post',checkLogin);
 router.post('/post',function(req,res){
   var currentUser = req.session.user;
-  post =  new Post(currentUser.name,req.body.title,req.body.post);
+  var tags = [req.body.tag1,req.body.tag2,req.body.tag3];
+
+  post =  new Post(currentUser.name,req.body.title,tags,req.body.post);
   post.save(function(err){
     if(err){
       res.flash('error',err);
@@ -179,10 +181,44 @@ router.get('/archive',function(req,res){
   });
 });
 
+// 所有標籤
+router.get('/tags',function(req,res){
+  Post.getTags(function(err,posts){
+    if(err){
+      req.flash('error',err);
+      return res.redirect('/');
+    }
+    return res.render('tags',{
+      title:'標籤',
+      posts:posts,
+      user:req.session.user,
+      success:req.flash('success').toString(),
+      error:req.flash('error').toString()
+    });
+  });
+});
+
+// 特定標籤
+router.get('/tags/:tag',function(req,res){
+  Post.getTag(req.params.tag,function(err,posts){
+    if(err){
+      req.flash('error',err);
+      return res.redirect('/');
+    }
+    return res.render('tag',{
+      title:'TAG:' + req.params.tag,
+      posts:posts,
+      user:req.session.user,
+      success:req.flash('success').toString(),
+      error:req.flash('error').toString()
+    });
+  });
+});
 
 
 // 查詢該用戶的所有文章
 router.get('/u/:name',function(req,res){
+  var page  = req.query.p ? parseInt(req.query.p) : 1;
   //檢查用戶是否存在
   User.get(req.params.name,function(err,user){
     if(!user){
@@ -190,21 +226,39 @@ router.get('/u/:name',function(req,res){
       return res.redirect('/');
     }
 
-    //查詢並傳回該用戶的所有文章
-    Post.getAll(user.name,function(err,posts){
+    // 查詢並傳回該用戶第page頁的10篇文章
+    Post.getTen(user.name,page,function(err,posts,total){
       if(err){
         req.flash('error',err);
         return res.redirect('/');
       }
-
-      res.render('user',{
+      return res.render('user',{
         title:user.name,
         posts:posts,
+        page:page,
+        isFirstPage:(page - 1) ==0,
+        isLastPage: ((page - 1) * 10 + posts.length) == total,
         user:req.session.user,
         success:req.flash('success').toString(),
         error:req.flash('error').toString()
       });
     });
+
+    //查詢並傳回該用戶的所有文章
+    // Post.getAll(user.name,function(err,posts){
+    //   if(err){
+    //     req.flash('error',err);
+    //     return res.redirect('/');
+    //   }
+
+    //   res.render('user',{
+    //     title:user.name,
+    //     posts:posts,
+    //     user:req.session.user,
+    //     success:req.flash('success').toString(),
+    //     error:req.flash('error').toString()
+    //   });
+    // });
   })
 });
 
