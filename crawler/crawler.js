@@ -15,7 +15,7 @@ request('http://www.cwb.gov.tw/V7/forecast/taiwan/Taipei_City.htm',function(err,
     $('.FcstBoxTable01 tbody tr').each(function(index,element){
         weather.push($(this).text().split('\n'));
     });
-    
+   
     var output = [];
     for(var index = 0 ; index <  weather.length; index ++){
         // global search in string
@@ -25,7 +25,7 @@ request('http://www.cwb.gov.tw/V7/forecast/taiwan/Taipei_City.htm',function(err,
             rain_probability : isEmptyOrUndefined(weather[index][6])
         });
     }
-    console.log(output);
+   console.log(output);
 });
 function isEmptyOrUndefined(value){
     if(value === '' || typeof value != 'undefined'){
