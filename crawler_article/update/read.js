@@ -71,7 +71,7 @@ exports.articleList = function(url,callback){
         // 檢查是否有下一頁
         var nextUrl = $('.SG_pgnext a').attr('href');
         if(nextUrl){
-            readArticleList(nextUrl,function(err,articleList2){
+            exports.articleList(nextUrl,function(err,articleList2){
                 if(err){
                     return callback(err);
                 }

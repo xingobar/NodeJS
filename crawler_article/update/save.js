@@ -18,7 +18,7 @@ exports.classList = function(list,callback){
                     }
                     if(Array.isArray(data) && data.length >=1 ){
                         // 分類已存在，所以須更新
-                        db.query('update `class_list` set `name` = ?, `url` = ? , where `id` = ?',
+                        db.query('update `class_list` set `name` = ?, `url` = ?  where `id` = ?',
                                 [item.name,item.url,item.id],next);
                     }else{
                         db.query('insert into `class_list`(`id`,`name`,`url`) values (?,?,?)',
@@ -32,10 +32,11 @@ exports.classList = function(list,callback){
 exports.articleList = function(class_id,list,callback){
 
     console.log('儲存文章列表中 ...... ');
+    console.log('%d %d ' , class_id,list.length);
 
     async.eachSeries(list,function(item,next){
         // 查詢文章是否已存在
-        db.query('select * from `article_list` where `id` = ? `class_id` = ? limit 1',
+        db.query('select * from `article_list` where `id` = ? and `class_id` = ? limit 1',
                 [item.id,class_id],function(err,data){
                     if(err){
                         return next(err);
@@ -43,7 +44,7 @@ exports.articleList = function(class_id,list,callback){
                     var created_time = new Date(item.time).getTime() / 1000;
 
                     if(Array.isArray(data) && data.length >=1){
-                        db.query('update `article_list` set `title` = ? , `url` = ? , `class_id`= ? ,`created_time` = ? , where `id` = ? and `class_id` = ? ',
+                        db.query('update `article_list` set `title` = ? , `url` = ? , `class_id`= ? ,`created_time` = ?  where `id` = ? and `class_id` = ? ',
                             [item.title,item.url,class_id,created_time,item.id,class_id],next);
                     }else{
                         db.query('insert into `article_list` (`id`,`title`,`url`,`class_id`,`created_time`) values (?,?,?,?,?)',
@@ -84,6 +85,8 @@ exports.articleTags = function(id,tags,callback){
 
 
 exports.articleDetail = function(id,tags,content,callback){
+    
+    console.log('儲存文章內容中....');
 
     db.query('select `id` from `article_detail` where `id` = ? ',[id],function(err,data){
         if(err){
