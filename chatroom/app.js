@@ -1,8 +1,11 @@
 var express = require('express');
 var app = express();
 var redis = require('./models/redis.js');
+var bodyParser = require('body-parser');
 
-app.use(express.bodyParser());
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
 
 app.post('/',function(req,res){
     if(!(req.body.owner && req.body.type && req.body.content)){
@@ -29,4 +32,5 @@ app.get('/',function(req,res){
 });
 
 app.listen(3000);
+console.log('Server running at 3000 port ....');
 
