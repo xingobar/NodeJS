@@ -85,7 +85,7 @@ router.get('/login',function(req,res){
     title:'登入',
     user:req.session.user,
     success:req.flash('success'),
-    erorr:req.flash('error')
+    error:req.flash('error')
   });
 });
 
@@ -98,13 +98,13 @@ router.post('/login',function(req,res){
    User.get(req.body.name,function(err,user){
       if(!user){
         req.flash('error','用戶不存在');
-        return req.redirect('/login');
+        return res.redirect('/login');
       }
 
       // 檢查密碼是否一致
       if(user.password != password){
         res.flash('error','密碼錯誤');
-        return req.redirect('/login');
+        return res.redirect('/login');
       }
 
       req.session.user = user;
